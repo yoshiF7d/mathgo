@@ -3,13 +3,13 @@ package list
 type Node struct {
 	next,prev *Node
 	list *List
-	Elem any
+	Value any
 }
 
 func (self *Node) Next() *Node {
 	if p := self.next; self.list != nil && p != &self.list.root {
 		return p
-	} 
+	}
 	return nil
 }
 
@@ -21,8 +21,7 @@ func (self *Node) Prev() *Node {
 }
 
 type List struct {
-	symbol *Symbol
-	root *Node
+	root Node
 	len int
 }
 
@@ -61,14 +60,14 @@ func (self *List) insertNode(node,at *Node) *List {
 	return self
 }
 
-func (self *List) insert(elem any, at *Node) *List {
-	return self.insertNode(&Node{Elem : elem},at)
+func (self *List) insert(value any, at *Node) *List {
+	return self.insertNode(&Node{Value : value},at)
 }
 
-func (self *List) Append(elem any) *List {
-	return self.insert(elem,&self.root)
+func (self *List) Prepend(value any) *List {
+	return self.insert(value,&self.root)
 }
 
-func (self *List) Prepend(elem any) *List {
-	return self.insert(elem,&self.root.prev)
+func (self *List) Append(value any) *List {
+	return self.insert(value,self.root.prev)
 }

@@ -1,9 +1,11 @@
 package main
 import "fmt"
-import . "github.com/yoshiF7d/mathgo/core"
+//import "github.com/yoshiF7d/mathgo/list"
+import "github.com/yoshiF7d/mathgo/symbol"
 
 func main() {
-	var expr Expr
-	fmt.Println(expr)
+	s := symbol.Integer
+	fmt.Println(s.Name)
+	fmt.Println(s.Attributes)
+	fmt.Println(s.Format)
 }
-
