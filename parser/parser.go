@@ -1,15 +1,23 @@
 package parser
+
 import "fmt"
-import "github.com/yoshiF7d/mathgo/list"
+import "container/list"
+import "github.com/yoshiF7d/mathgo/symbol"
 
-func main() {
-	l := list.New()
-	l.Append("apple")
-	l.Append(2)
-	l.Append('b')
-	l.Prepend(4)
+var tree list.List
 
-	for e := l.First(); e != nil; e = e.Next() {
-		fmt.Println(e.Value)
+const (
+	LIST = iota
+	TERMINAL
+)
+
+func init() {
+	tree.Init()
+	for _,s := range symbol.SymbolMap {
+		appendToTree(s)
 	}
+}
+
+func appendToTree(s symbol.SymbolType) {
+
 }
