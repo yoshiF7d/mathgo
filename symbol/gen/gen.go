@@ -69,7 +69,7 @@ func main() {
 
 		buf.WriteString("SymbolMap [")
 		buf.WriteString(name)
-		buf.WriteString(".Name] = ")
+		buf.WriteString(".Name] = &")
 		buf.WriteString(name)
 		buf.WriteString("\n")
 	}
