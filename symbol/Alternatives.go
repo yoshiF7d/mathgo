@@ -1,5 +1,5 @@
 package symbol
 
 func init() {
-	Alternatives.Format = `"|" .`
+	Alternatives.Format = `|`
 }

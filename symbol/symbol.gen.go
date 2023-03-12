@@ -8,8 +8,10 @@ const (
 	Dot_ID          = iota
 	DoubleQuotes_ID = iota
 	Integer_ID      = iota
-	Rune_ID         = iota
+	Space_ID        = iota
+	String_ID       = iota
 	Symbol_ID       = iota
+	TreeForm_ID     = iota
 )
 
 var Alternatives = SymbolType{}
@@ -18,8 +20,10 @@ var Comma = SymbolType{}
 var Dot = SymbolType{}
 var DoubleQuotes = SymbolType{}
 var Integer = SymbolType{}
-var Rune = SymbolType{}
+var Space = SymbolType{}
+var String = SymbolType{}
 var Symbol = SymbolType{}
+var TreeForm = SymbolType{}
 
 func init() {
 	Alternatives.ID = Alternatives_ID
@@ -40,10 +44,16 @@ func init() {
 	Integer.ID = Integer_ID
 	Integer.Name = "Integer"
 	SymbolMap[Integer.Name] = &Integer
-	Rune.ID = Rune_ID
-	Rune.Name = "Rune"
-	SymbolMap[Rune.Name] = &Rune
+	Space.ID = Space_ID
+	Space.Name = "Space"
+	SymbolMap[Space.Name] = &Space
+	String.ID = String_ID
+	String.Name = "String"
+	SymbolMap[String.Name] = &String
 	Symbol.ID = Symbol_ID
 	Symbol.Name = "Symbol"
 	SymbolMap[Symbol.Name] = &Symbol
+	TreeForm.ID = TreeForm_ID
+	TreeForm.Name = "TreeForm"
+	SymbolMap[TreeForm.Name] = &TreeForm
 }

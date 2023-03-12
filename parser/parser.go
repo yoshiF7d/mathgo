@@ -1,8 +1,14 @@
 package parser
 
-import . "github.com/yoshiF7d/mathgo/symbol"
-
+import (
+	"fmt"
+	. "github.com/yoshiF7d/mathgo/symbol"
+)
 var tree Node
+
+func Parse(s string) *Node{
+	return Node_create(&Symbol,nil)
+} 
 
 func init() {
 	tree.Init()
@@ -11,14 +17,15 @@ func init() {
 			appendToTree(s)
 		}
 	}
+	fmt.Println(tree)
 }
 
 func appendToTree(s *SymbolType) {
-	root := tree
+	root := &tree
 	for _, cf := range s.Format {
 		e := root.Front()
 		for ; e != nil; e = e.Next() {
-			node := e.Value.(Node)
+			node := e.Value.(*Node)
 			cn := node.Data.(rune)
 
 			if cf == cn {
@@ -27,7 +34,7 @@ func appendToTree(s *SymbolType) {
 			}
 		}
 		if e == nil {
-			root.PushBack(Node{Symbol:SymbolMap["Symbol"],Data:cf})
+			root.PushBack(&Node{Symbol:s,Data:cf})
 		}
 	}
 }

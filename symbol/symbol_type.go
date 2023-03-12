@@ -2,7 +2,6 @@ package symbol
 
 import (
 	"container/list"
-	"bytes"
 )
 
 type SymbolType struct {
@@ -12,6 +11,7 @@ type SymbolType struct {
 	Attributes    []string
 	Associativity []string
 	ID            uint16
+	Evaluate      func(*Node) *Node
 }
 
 type Node struct {
@@ -22,17 +22,16 @@ type Node struct {
 
 var SymbolMap = map[string]*SymbolType{}
 
-func (s *SymbolType) String() string{
+func (s *SymbolType) String() string {
 	return s.Name
 }
 
-func (n *Node) String() string{
-
+func (n Node) String() string {
+	return TreeForm_String(&n)
 }
 
-func (n *Node) StringMod(level int) string{
-	var buf bytes.Buffer
-	for i:=0 ; i<level; i++ {
-		buf.WriteString("\t")
-	}
+func Node_create(symbol *SymbolType, data any) *Node {
+	node := Node{Symbol: symbol, Data: data}
+	node.Init()
+	return &node
 }

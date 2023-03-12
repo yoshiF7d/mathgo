@@ -1,10 +1,13 @@
 package main
-import "fmt"
-//import "github.com/yoshiF7d/mathgo/list"
-import "github.com/yoshiF7d/mathgo/symbol"
+
+import (
+	"fmt"
+	"github.com/yoshiF7d/mathgo/symbol"
+	"github.com/yoshiF7d/mathgo/parser"
+)
 
 func main() {
-	m := symbol.SymbolMap
-
+	m := symbol.TreeForm
+	parser.Parse("test")
 	fmt.Println(m)
 }
