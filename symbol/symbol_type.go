@@ -12,6 +12,7 @@ type SymbolType struct {
 	Associativity []string
 	ID            uint16
 	Evaluate      func(*Node) *Node
+	toString      func(*Node) string
 }
 
 type Node struct {
@@ -20,17 +21,26 @@ type Node struct {
 	Data   any
 }
 
-var SymbolMap = map[string]*SymbolType{}
+var SymbolMap map[string]*SymbolType
+var SymbolList []*SymbolType
 
 func (s *SymbolType) String() string {
 	return s.Name
 }
 
-func (n Node) String() string {
-	return TreeForm_String(&n)
+func (node *Node) String() string {
+	if node.Symbol == nil {
+		return ""
+	} else {
+		if node.Symbol.toString == nil {
+			return node.Symbol.Name
+		} else {
+			return node.Symbol.toString(node)
+		}
+	}
 }
 
-func Node_create(symbol *SymbolType, data any) *Node {
+func NewNode(symbol *SymbolType, data any) *Node {
 	node := Node{Symbol: symbol, Data: data}
 	node.Init()
 	return &node
