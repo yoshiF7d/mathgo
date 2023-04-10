@@ -2,84 +2,109 @@ package parser
 
 import (
 	"io"
-	"fmt"
-	. "github.com/yoshiF7d/mathgo/symbol"
+	"log"
+	"strings"
+	"github.com/yoshiF7d/mathgo/symbol"
 )
-var tree *Node
+var tree *symbol.Node
 
 func init() {
-	tree = NewNodeSymbol("root")
-	for _,s := range SymbolMap {
+	tree = symbol.NewNodeSymbol("root")
+	for _,s := range symbol.SymbolList {
 		if length := len(s.Format); 0 < length && length <= 2 {
 			appendToTree(s)
 		}
 	}
-	fmt.Println(TreeForm_String(tree))
+	//fmt.Println(TreeForm_String(tree))
 }
 
-func appendToTree(s *SymbolType) {
-	root := tree
-	term := true
+func appendToTree(s *symbol.SymbolType) {
+	root,hit := tree,false
 	for _, c := range s.Format {
-		root,term = lookUpTree(root,c)
-		
-		if term {
-			node := NewNodeSymbol(string(c))
+		root,hit = lookUpTree(root,c)
+		if !hit {
+			node := symbol.NewNodeSymbol(string(c))
 			root.PushBack(node)
 			root = node
 		}
 	}
-	root.PushBack(NewNode(s,nil))
+	root.PushBack(symbol.NewNode(s,nil))
 }
 
-func lookUpTree(root *Node, c rune) (*Node,bool){
-	term := true
+func lookUpTree(root *symbol.Node, c rune) (*symbol.Node,bool){
+	hit := false
 	for e := root.Front(); e != nil; e = e.Next() {
-		node := e.Value.(*Node)
+		node := symbol.GetNode(e)
 		cn := rune(node.String()[0])
 
+		//fmt.Println(node.String())
+		
 		if c == cn {
 			root = node
-			term = false
+			hit = true
 			break
 		}
 	}
-	
-	return root,term
+	return root,hit
 }
 
-
-func Assign(reader io.RuneReader) *Node{
-	root := tree
-	term := true
-
+func assign(reader *strings.Reader) (*symbol.Node,error){
+	root,hit := tree,false
+	//pare := tree
+	var (
+		c rune
+		err error
+	)
 	for {
-		if c,_,err:=reader.ReadRune();err!=nil{
+		if c,_,err = reader.ReadRune(); err != nil {
 			if err == io.EOF {
 				break
 			} else {
-				fmt.Println(err)
+				log.Fatal(err)
 			}
-		}else{
-			root,term = lookUpTree(root,c)
-			if term {
+		} else {
+			//pare = root
+			root,hit = lookUpTree(root,c)
+			//fmt.Println(string(c))
+			if hit {
+				if root.Len() == 0 {
+					break
+				}
+			} else {
+				reader.UnreadRune()
 				break
 			}
 		}
 	}
-	return root
+	if root != tree {
+		for e:= root.Front(); e != nil; e = e.Next() {
+			node := symbol.GetNode(e)
+			if node.Symbol.ID != symbol.Symbol_ID {
+				root = node
+				break
+			}
+		}
+	}
+	return root,err
 }
 
-
-func Tokenize(str string) *Node{
-	stack := NewNodeSymbol("root")
-	
-	
-
-
+func Tokenize(s string) *symbol.Node{
+	stack := symbol.NewNodeSymbol("root")
+	reader := strings.NewReader(s)
+	for {
+		node,err := assign(reader)
+		stack.PushBack(node)
+		if node == tree || err == io.EOF{
+			break
+		}
+	}
 	return stack
 }
 
-func Parse(s string) *Node{
-	return NewNode(&Symbol,nil)
+func Parse(s string) *symbol.Node{
+	return Tokenize(s)
 } 
+
+func Root() *symbol.Node{
+	return tree
+}

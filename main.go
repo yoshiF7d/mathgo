@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/yoshiF7d/mathgo/symbol"
+	"flag"
 	"github.com/yoshiF7d/mathgo/parser"
+	"github.com/yoshiF7d/mathgo/symbol"
 )
 
 func main() {
-	m := symbol.TreeForm
-	parser.Parse("test")
-	fmt.Println(m)
+	flag.Parse()
+	args := flag.Args()
+	p := parser.Parse(args[0])
+	symbol.TreeForm_print(parser.Root())
+	fmt.Println(symbol.TreeForm_String(p))
 }

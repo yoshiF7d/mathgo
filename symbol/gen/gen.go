@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"unicode"
 )
@@ -21,6 +22,8 @@ func main() {
 			names = append(names, name)
 		}
 	}
+
+	sort.Strings(names)
 
 	fp, err := os.Create("../symbol.gen.go")
 	if err != nil {
@@ -43,14 +46,19 @@ func main() {
 	}
 	buf.WriteString(")\n")
 
-	for _, name := range names {
-		buf.WriteString("var ")
+	buf.WriteString("var ")
+	for i, name := range names {
 		buf.WriteString(name)
-		buf.WriteString(" = SymbolType{}\n")
+		if i < len(names)-1 {
+			buf.WriteRune(',')
+		} else {
+			buf.WriteRune(' ')
+		}
 	}
+	buf.WriteString("SymbolType\n")
 
 	buf.WriteString("func init() {\n")
-
+	buf.WriteString(fmt.Sprintf("SymbolList = make([]*SymbolType,%d)\n", len(names)))
 	for _, name := range names {
 		fmt.Println(name)
 
@@ -70,6 +78,14 @@ func main() {
 		buf.WriteString(name)
 		buf.WriteString(".Name] = &")
 		buf.WriteString(name)
+		buf.WriteString(" ; ")
+
+		buf.WriteString("SymbolList [")
+		buf.WriteString(name)
+		buf.WriteString(".ID] = &")
+		buf.WriteString(name)
+		buf.WriteString(" ; ")
+
 		buf.WriteString("\n")
 	}
 

@@ -21,7 +21,7 @@ type Node struct {
 	Data   any
 }
 
-var SymbolMap map[string]*SymbolType
+var SymbolMap = map[string]*SymbolType{}
 var SymbolList []*SymbolType
 
 func (s *SymbolType) String() string {
@@ -38,6 +38,14 @@ func (node *Node) String() string {
 			return node.Symbol.toString(node)
 		}
 	}
+}
+
+func (node *Node) Child() *Node {
+	return node.Front().Value.(*Node)
+}
+
+func GetNode(e *list.Element) *Node {
+	return e.Value.(*Node)
 }
 
 func NewNode(symbol *SymbolType, data any) *Node {
