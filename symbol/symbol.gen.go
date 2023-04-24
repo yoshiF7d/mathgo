@@ -8,22 +8,26 @@ const (
 	Divide_ID       = iota
 	Dot_ID          = iota
 	DoubleQuotes_ID = iota
+	Equal_ID        = iota
 	Increment_ID    = iota
 	Integer_ID      = iota
 	Map_ID          = iota
 	Plus_ID         = iota
 	Postfix_ID      = iota
 	Prefix_ID       = iota
+	Repeat_ID       = iota
+	RepeatedNull_ID = iota
+	Set_ID          = iota
 	Space_ID        = iota
 	String_ID       = iota
 	Symbol_ID       = iota
 	TreeForm_ID     = iota
 )
 
-var Alternatives, Bracket, Comma, Divide, Dot, DoubleQuotes, Increment, Integer, Map, Plus, Postfix, Prefix, Space, String, Symbol, TreeForm SymbolType
+var Alternatives, Bracket, Comma, Divide, Dot, DoubleQuotes, Equal, Increment, Integer, Map, Plus, Postfix, Prefix, Repeat, RepeatedNull, Set, Space, String, Symbol, TreeForm SymbolType
 
 func init() {
-	SymbolList = make([]*SymbolType, 16)
+	SymbolList = make([]*SymbolType, 20)
 	Alternatives.ID = Alternatives_ID
 	Alternatives.Name = "Alternatives"
 	SymbolMap[Alternatives.Name] = &Alternatives
@@ -48,6 +52,10 @@ func init() {
 	DoubleQuotes.Name = "DoubleQuotes"
 	SymbolMap[DoubleQuotes.Name] = &DoubleQuotes
 	SymbolList[DoubleQuotes.ID] = &DoubleQuotes
+	Equal.ID = Equal_ID
+	Equal.Name = "Equal"
+	SymbolMap[Equal.Name] = &Equal
+	SymbolList[Equal.ID] = &Equal
 	Increment.ID = Increment_ID
 	Increment.Name = "Increment"
 	SymbolMap[Increment.Name] = &Increment
@@ -72,6 +80,18 @@ func init() {
 	Prefix.Name = "Prefix"
 	SymbolMap[Prefix.Name] = &Prefix
 	SymbolList[Prefix.ID] = &Prefix
+	Repeat.ID = Repeat_ID
+	Repeat.Name = "Repeat"
+	SymbolMap[Repeat.Name] = &Repeat
+	SymbolList[Repeat.ID] = &Repeat
+	RepeatedNull.ID = RepeatedNull_ID
+	RepeatedNull.Name = "RepeatedNull"
+	SymbolMap[RepeatedNull.Name] = &RepeatedNull
+	SymbolList[RepeatedNull.ID] = &RepeatedNull
+	Set.ID = Set_ID
+	Set.Name = "Set"
+	SymbolMap[Set.Name] = &Set
+	SymbolList[Set.ID] = &Set
 	Space.ID = Space_ID
 	Space.Name = "Space"
 	SymbolMap[Space.Name] = &Space

@@ -6,12 +6,13 @@ import (
 	"strings"
 	"github.com/yoshiF7d/mathgo/symbol"
 )
+
 var tree *symbol.Node
 
 func init() {
-	tree = symbol.NewNodeSymbol("root")
+	tree = symbol.NewNode(&symbol.Symbol,"root")
 	for _,s := range symbol.SymbolList {
-		if length := len(s.Format); 0 < length && length <= 2 {
+		if length := len(s.Format); 0 < length && length <= 3 {
 			appendToTree(s)
 		}
 	}
@@ -23,18 +24,18 @@ func appendToTree(s *symbol.SymbolType) {
 	for _, c := range s.Format {
 		root,hit = lookUpTree(root,c)
 		if !hit {
-			node := symbol.NewNodeSymbol(string(c))
-			root.PushBack(node)
+			node := symbol.NewNode(&symbol.Symbol,string(c))
+			root.Append(node)
 			root = node
 		}
 	}
-	root.PushBack(symbol.NewNode(s,nil))
+	root.Append(symbol.NewNode(s,nil))
 }
 
 func lookUpTree(root *symbol.Node, c rune) (*symbol.Node,bool){
 	hit := false
-	for e := root.Front(); e != nil; e = e.Next() {
-		node := symbol.GetNode(e)
+	for e := root.First(); e != nil; e = e.Next() {
+		node := e.Value
 		cn := rune(node.String()[0])
 
 		//fmt.Println(node.String())
@@ -77,8 +78,8 @@ func assign(reader *strings.Reader) (*symbol.Node,error){
 		}
 	}
 	if root != tree {
-		for e:= root.Front(); e != nil; e = e.Next() {
-			node := symbol.GetNode(e)
+		for e:= root.First(); e != nil; e = e.Next() {
+			node := e.Value
 			if node.Symbol.ID != symbol.Symbol_ID {
 				root = node
 				break
@@ -89,11 +90,14 @@ func assign(reader *strings.Reader) (*symbol.Node,error){
 }
 
 func Tokenize(s string) *symbol.Node{
-	stack := symbol.NewNodeSymbol("root")
+	stack := symbol.NewNode(&symbol.Symbol,"root")
 	reader := strings.NewReader(s)
 	for {
 		node,err := assign(reader)
-		stack.PushBack(node)
+		if node != tree {
+			stack.Append(node)	
+		}
+		
 		if node == tree || err == io.EOF{
 			break
 		}
